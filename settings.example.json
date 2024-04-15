@@ -1,0 +1,21 @@
+{
+    "cmd_docker_compose": "docker-compose",
+    "log_file_pathname": "./logs/log.log",
+    "log_files_keep": 10,
+    "project_path": "",
+    "db_user": "",
+    "db_password": "",
+    "db_name": "",
+    "db_table": "",
+    "dump_container_dir": "",
+    "dump_host_dir": "",
+    "dump_host_home_path": "",
+    "dump_filename": "",
+
+    "dumps_files_keep": 10,
+
+    "aws_region": "us-east-1",
+    "aws_access_key_id": "",
+    "aws_secret_access_key": "",
+    "aws_s3_db_dumps_bucket": ""
+}
