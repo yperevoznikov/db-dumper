@@ -36,7 +36,7 @@ def main(settings):
     dump_host_path = settings.get("dump_host_dir") + dump_filename
     dump_host_home_path = settings.get("dump_host_home_path")
 
-    host_cmd = f'{cmd_docker_compose} ps'
+    host_cmd = f'{cmd_docker_compose} exec db bash -c "echo test"'
     _run_cmd("ps containers", host_cmd)
 
     # Create db dump inside container
