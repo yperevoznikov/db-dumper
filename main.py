@@ -115,7 +115,7 @@ def main(settings):
 
 
 if __name__ == '__main__':
-    with open("settings.json", "r") as f:
+    with open(os.path.join(sys.path[0], "settings.json"), "r") as f:
         settings = json.load(f)
 
     logging.basicConfig(
