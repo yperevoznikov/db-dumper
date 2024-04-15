@@ -36,19 +36,16 @@ def main(settings):
     dump_host_path = settings.get("dump_host_dir") + dump_filename
     dump_host_home_path = settings.get("dump_host_home_path")
 
-    host_cmd = f'{cmd_docker_compose} exec db bash -c "echo test"'
-    _run_cmd("ps containers", host_cmd)
-
     # Create db dump inside container
     logger.info("Start dumping, table: %s", db_table)
     container_cmd = f'mysqldump --verbose -u {db_user} -p{db_password} {db_name} {db_table} > {dump_container_path}'
-    host_cmd = f'{cmd_docker_compose} exec db bash -c "{container_cmd}"'
+    host_cmd = f'{cmd_docker_compose} exec -T db bash -c "{container_cmd}"'
     _run_cmd("db dumping", host_cmd)
 
     # Make file fully accessible to access from host machine
     logger.info("Make file fully accessible to access from host machine: %s", dump_container_path)
     container_cmd = f'chmod --changes --verbose 777 {dump_container_path}'
-    host_cmd = f'{cmd_docker_compose} exec db bash -c "{container_cmd}"'
+    host_cmd = f'{cmd_docker_compose} exec -T db bash -c "{container_cmd}"'
     _run_cmd("permission change", host_cmd)
 
     # Remove previous archive
@@ -70,7 +67,7 @@ def main(settings):
     # Remove original file
     logger.info("Remove original file in container")
     container_cmd = f'rm {dump_container_path}'
-    host_cmd = f'{cmd_docker_compose} exec db bash -c "{container_cmd}"'
+    host_cmd = f'{cmd_docker_compose} exec -T db bash -c "{container_cmd}"'
     _run_cmd("removing file in container", host_cmd)
 
     # Archive dump
