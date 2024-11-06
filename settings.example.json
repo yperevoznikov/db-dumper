@@ -12,6 +12,7 @@
     "dump_host_home_path": "",
     "dump_filename": "",
 
+    "remove_old_dump_files": true,
     "dumps_files_keep": 10,
 
     "aws_region": "us-east-1",

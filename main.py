@@ -93,22 +93,23 @@ def main(settings):
         sys.exit(1)
 
     # Remove previous archive
-    logger.info("Remove archieve")
+    logger.info("Remove archive")
     os.unlink(f'{dump_host_home_path}{dump_filename}.gz')
 
     # Remove old dumps from AWS S3
-    logger.info("Remove old dumps from AWS S3")
-    get_last_modified = lambda obj: int(obj['LastModified'].strftime('%s'))
-    try:
-        s3_file_records = s3.list_objects_v2(Bucket=settings.get("aws_s3_db_dumps_bucket")).get('Contents', [])
-        s3_file_record_keys = [obj['Key'] for obj in sorted(s3_file_records, key=get_last_modified)]
-        s3_keys_to_delete = s3_file_record_keys[:-settings.get("dumps_files_keep")]
-        for s3_file_record_key in s3_keys_to_delete:
-            logger.info("Removing old dump: %s", s3_file_record_key)
-            s3.delete_object(Bucket=settings.get("aws_s3_db_dumps_bucket"), Key=s3_file_record_key)
-    except ClientError as e:
-        logging.error(e)
-        sys.exit(1)
+    if settings.get("remove_old_dump_files"):
+        logger.info("Remove old dumps from AWS S3")
+        get_last_modified = lambda obj: int(obj['LastModified'].strftime('%s'))
+        try:
+            s3_file_records = s3.list_objects_v2(Bucket=settings.get("aws_s3_db_dumps_bucket")).get('Contents', [])
+            s3_file_record_keys = [obj['Key'] for obj in sorted(s3_file_records, key=get_last_modified)]
+            s3_keys_to_delete = s3_file_record_keys[:-settings.get("dumps_files_keep")]
+            for s3_file_record_key in s3_keys_to_delete:
+                logger.info("Removing old dump: %s", s3_file_record_key)
+                s3.delete_object(Bucket=settings.get("aws_s3_db_dumps_bucket"), Key=s3_file_record_key)
+        except ClientError as e:
+            logging.error(e)
+            sys.exit(1)
 
 
 if __name__ == '__main__':
